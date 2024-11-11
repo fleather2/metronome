@@ -1,0 +1,17 @@
+services:
+  app:
+    image: app
+    working_dir: /app/
+    entrypoint: npm start #tail -f /dev/null #
+    build:
+      context: ./app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/app
+    networks:
+      - network
+    
+networks:
+  network:
+    driver: bridge
