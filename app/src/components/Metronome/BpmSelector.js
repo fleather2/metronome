@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Slider, Container, Stack, Button, TextField } from "@mui/material"
 
-const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
+const BpmSelector = ({maxBpm, minBpm, bpm, setBpm, audioContext, doRunMetronome, setDoRunMetronome}) => {
 
     const updateBpm = (newBpm) => {
         if (isNaN(newBpm)) {
@@ -38,6 +38,7 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
                          }}
                     onBlur={() => {
                         updateBpm(bpm);
+                        audioContext.resume();
                     }}
                 />
                 <Button variant="contained" onClick={() => updateBpm(bpm + 1)}>+1</Button>
@@ -48,7 +49,14 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
                 min={minBpm}
                 max={maxBpm}
                 value={bpm}
-                onChange={ (_, val) => setBpm(val) } // TODO we want to separate onChange forom onChangeCommitted, where we pause the metronome on onChange and replay it on onChangeCommitted
+                onChange={ (_, val) => {
+                    setDoRunMetronome(false);
+                    setBpm(val);
+                }} // TODO we want to separate onChange forom onChangeCommitted, where we pause the metronome on onChange and replay it on onChangeCommitted
+                onChangeCommitted={ () => {
+                    setDoRunMetronome(true);
+                    console.log(doRunMetronome);
+                }}
             />
         </Container>
     )
