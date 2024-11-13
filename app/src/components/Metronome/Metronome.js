@@ -18,11 +18,14 @@ const NUM_BEATS = 4;
 
 function Metronome() {
     const [bpm, setBpm] = useState(DEFAULT_BPM);
+    const audioContext = new AudioContext();
+
+    
 
     return (
         <Container >
+            <Player bpm={bpm} numBeats={NUM_BEATS}  audioContext={audioContext}/>
             <BpmSelector maxBpm={MAX_BPM} minBpm={MIN_BPM} bpm={bpm} setBpm={setBpm}/>
-            <Player bpm={bpm} numBeats={NUM_BEATS}/>
         </Container>
     )
 }
