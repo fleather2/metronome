@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { motion } from "framer-motion";
 import { Slider, Container, Stack, Button, TextField, InputAdornment, FormControl } from "@mui/material"
 import BpmSelector from "./BpmSelector"
+import Player from './Player';
 /*  TODO
 3 parts:
 1. beat selector (how many beats per measure + subdivisions)
@@ -11,6 +12,7 @@ import BpmSelector from "./BpmSelector"
 const MIN_BPM = 20;
 const MAX_BPM = 500;
 const DEFAULT_BPM = 120;
+const NUM_BEATS = 4;
 
 
 
@@ -20,6 +22,7 @@ function Metronome() {
     return (
         <Container >
             <BpmSelector maxBpm={MAX_BPM} minBpm={MIN_BPM} bpm={bpm} setBpm={setBpm}/>
+            <Player bpm={bpm} numBeats={NUM_BEATS}/>
         </Container>
     )
 }
