@@ -16,6 +16,7 @@ function BpmSelector() {
     const [bpm, setBpm] = useState(DEFAULT_BPM);
 
     const updateBpm = (newBpm) => {
+        console.log("Here, ", newBpm);
         if (isNaN(newBpm)) {
             console.error("Cannot change bpm to ", newBpm);
             return false;
@@ -44,13 +45,13 @@ function BpmSelector() {
                     onChange={(e) => { 
                         const v = e.target.value;
                         if (isNaN(v)) {
-                            document.getElementById("bpm-text-field").label = "Dickle";
                         } else {
                             setBpm(v)
                         }
                          }}
-                    onFocusCapture={() => console.log("Here")}
-                    onBlur={() => console.log("here2")}
+                    onBlur={() => {
+                        updateBpm(bpm);
+                    }}
                 />
                 <Button variant="contained" onClick={() => updateBpm(bpm + 1)}>+1</Button>
                 <Button variant="contained" onClick={() => updateBpm(bpm + 5)}>+5</Button>
