@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { motion } from "framer-motion";
 import { Slider, Container, Stack, Button, TextField, InputAdornment, FormControl } from "@mui/material"
-
+import BpmSelector from "./BpmSelector"
 /*  TODO
 3 parts:
 1. beat selector (how many beats per measure + subdivisions)
@@ -12,66 +12,14 @@ const MIN_BPM = 20;
 const MAX_BPM = 500;
 const DEFAULT_BPM = 120;
 
-function BpmSelector() {
-    const [bpm, setBpm] = useState(DEFAULT_BPM);
 
-    const updateBpm = (newBpm) => {
-        console.log("Here, ", newBpm);
-        if (isNaN(newBpm)) {
-            console.error("Cannot change bpm to ", newBpm);
-            return false;
-        }
-        if (newBpm > MAX_BPM) {
-            setBpm(MAX_BPM);
-            return true;
-        } 
-        if (newBpm < MIN_BPM) {
-            setBpm(MIN_BPM);
-            return true;
-        }
-        setBpm(newBpm);
-        return true;
-    }
-
-    return (
-        <Container>
-            <Stack direction="row" spacing={2}>
-                <Button variant="contained" onClick={() => updateBpm(bpm + -10)}>-10</Button>
-                <Button variant="contained" onClick={() => updateBpm(bpm + -5)}>-5</Button>
-                <Button variant="contained" onClick={() => updateBpm(bpm + -1)}>-1</Button>
-                <TextField 
-                    id = "bpm-text-field" 
-                    value={bpm}
-                    onChange={(e) => { 
-                        const v = e.target.value;
-                        if (isNaN(v)) {
-                        } else {
-                            setBpm(v)
-                        }
-                         }}
-                    onBlur={() => {
-                        updateBpm(bpm);
-                    }}
-                />
-                <Button variant="contained" onClick={() => updateBpm(bpm + 1)}>+1</Button>
-                <Button variant="contained" onClick={() => updateBpm(bpm + 5)}>+5</Button>
-                <Button variant="contained" onClick={() => updateBpm(bpm + 10)}>+10</Button>
-            </Stack>
-            <Slider 
-                min={MIN_BPM}
-                max={MAX_BPM}
-                value={bpm}
-                onChange={ (_, val) => setBpm(val) } // TODO we want to separate onChange forom onChangeCommitted, where we pause the metronome on onChange and replay it on onChangeCommitted
-            />
-        </Container>
-    )
-}
 
 function Metronome() {
+    const [bpm, setBpm] = useState(DEFAULT_BPM);
+
     return (
         <Container >
-            <h1>Metronome here!</h1>
-            <BpmSelector />
+            <BpmSelector maxBpm={MAX_BPM} minBpm={MIN_BPM} bpm={bpm} setBpm={setBpm}/>
         </Container>
     )
 }
