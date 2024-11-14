@@ -34,15 +34,15 @@ const Player = ({bpm, numBeats, audioContext, gainNode}) => {
                     beatCount: beatCounter
                 })
                 const a = beatSchedule.find((element) => element.beatTime === nextNoteTime);
-                
 
-                let b = ((nextNoteTime) % (noteInterval*4));
-                if (Math.abs(b-0) < 0.01 || Math.abs(b-numBeats*noteInterval) < 0.01) {
+                // Emphasize strong beats
+                let b = Math.round(nextNoteTime / noteInterval);
+                console.log("Beat num", b);
+                if (b % numBeats === 0) {
                     oscNode.frequency.value = 1000;
                 } else {
                     oscNode.frequency.value = 800;
                 }
-                console.log("Beat number:", b);
 
                 oscNode.start(nextNoteTime);
                 oscNode.stop(nextNoteTime + 0.05);
