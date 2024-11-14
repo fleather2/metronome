@@ -22,7 +22,7 @@ const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
 
                 while (nextNoteTime <= startTime + intervalDuration) {
                     audioContext.resume();
-                    console.log("Scheduling note for", nextNoteTime);
+                    //console.log("Scheduling note for", nextNoteTime);
                     const oscNode = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
                     gainNode.connect(audioContext.destination);
@@ -31,7 +31,7 @@ const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
 
                     // Emphasize strong beats
                     const b = Math.round(nextNoteTime / noteInterval);
-                    console.log("Beat num", b);
+                    //console.log("Beat num", b);
                     if (b % numBeats === 0) {
                         oscNode.frequency.value = 1000;
                     } else {
@@ -62,10 +62,27 @@ const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
         }
     }, [bpm, play])
 
+    const [currentBeat, setCurrentBeat] = useState(0);
+    const [nextBeat, setNextBeat] = useState(0);
+    useEffect( () => {
+        const intervalId = setInterval( () => {
+            const startTime = audioContext.currentTime;
+            let a = beatList.find(({beatTime}) => beatTime > startTime);
+            if (a) {
+                while (audioContext.currentTime < a.beatTime) {
+                    setCurrentBeat(a.beatNum);
+                }
+            }
+        }, 10);
+    })
+
+    useEffect( () => {})
+
     return (
         <Container>
             <Button onClick={() => setPlay(true)}>Start</Button>
             <Button onClick={() => setPlay(false)}>Stop</Button>
+            {currentBeat}
         </Container>
     )
 }
