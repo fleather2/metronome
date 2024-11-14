@@ -7,33 +7,22 @@ function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
 }
 
-const Player = ({bpm, numBeats, audioContext, gainNode}) => {
-    const [isPlaying, setIsPlaying] = useState(false);
+const Player = ({bpm, numBeats, audioContext, gainNode, beatMap}) => {
     const hasPageBeenRendered = useRef(false);
-    const [beatSchedule, setBeatSchedule] = useState([]);
-    const [beatCounter, setBeatCounter] = useState(0);
 
     let intervalDuration = 0.9;
     useEffect( () => {
-        setBeatSchedule([]);
         const intervalId = setInterval( () => {
             const startTime = audioContext.currentTime;
             
             let noteInterval = 60/bpm;
             let nextNoteTime = noteInterval*(Math.floor(audioContext.currentTime/noteInterval)+1);
-            let newBeatSchedule = [];
 
             while (nextNoteTime <= startTime + intervalDuration) {
                 audioContext.resume();
                 console.log("Scheduling note for", nextNoteTime);
                 const oscNode = audioContext.createOscillator();
                 oscNode.connect(gainNode);
-                
-                newBeatSchedule.push({
-                    noteTime: nextNoteTime,
-                    beatCount: beatCounter
-                })
-                const a = beatSchedule.find((element) => element.beatTime === nextNoteTime);
 
                 // Emphasize strong beats
                 let b = Math.round(nextNoteTime / noteInterval);
@@ -47,9 +36,7 @@ const Player = ({bpm, numBeats, audioContext, gainNode}) => {
                 oscNode.start(nextNoteTime);
                 oscNode.stop(nextNoteTime + 0.05);
                 nextNoteTime += noteInterval;
-            }
-        //console.log("Beat schedule", newBeatSchedule);
-        
+            }        
 
         }, intervalDuration*1000)
         return () => {
@@ -57,35 +44,6 @@ const Player = ({bpm, numBeats, audioContext, gainNode}) => {
         }
     }, [bpm])
 
-    // useEffect( () => {
-    //     const intervalId = setInterval( () => {
-    //         console.log(beatSchedule);
-    //     }, 1000)
-    //     return () => {
-           
-    //     }
-
-    // }, [])
-
-    // useEffect( () => {
-    //     const intervalId = setInterval( () => {
-    //         if (beatTimes[currentBeat] < ac.currentTime) {
-    //             setCurrentBeat(currentBeat + 1);
-
-    //         }
-    //     }, 5);
-    //     return () => {
-    //         clearInterval(intervalId);
-    //     };
-    // }, [beatTimes, currentBeat])
-
-    return (
-        <Container>
-            {/* <Button variant="contained" onClick={() => startMetronome()}>Start</Button>
-            <Button variant="contained" onClick={stopMetronome}>Stop</Button> */}
-            <div className="beatCircle" />
-        </Container>
-        ); 
 }
 
 export default Player;

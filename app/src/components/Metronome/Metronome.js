@@ -15,17 +15,17 @@ const MAX_BPM = 400;
 const DEFAULT_BPM = 120;
 const NUM_BEATS = 4;
 
-
 function Metronome() {
     const [bpm, setBpm] = useState(DEFAULT_BPM);
     const audioContext = new AudioContext();
     const gainNode = audioContext.createGain();
+    const beatMap = new Map([]);
     gainNode.connect(audioContext.destination);
     gainNode.gain.value = 1;
 
     return (
         <Container >
-            < Player bpm={bpm} numBeats={NUM_BEATS} audioContext={audioContext} gainNode={gainNode}/>
+            <Player bpm={bpm} numBeats={NUM_BEATS} audioContext={audioContext} gainNode={gainNode} beatMap={beatMap}/>
             <BpmSelector maxBpm={MAX_BPM} minBpm={MIN_BPM} bpm={bpm} setBpm={setBpm}/>
         </Container>
     )
