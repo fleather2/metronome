@@ -1,54 +1,58 @@
 import { useState, useEffect } from "react";
 import { animate } from "motion";
-import { Container } from "@mui/material";
+import { Container, Button } from "@mui/material";
 import "./beat.css";
 
-function playTone(audioContext, freq, duration, vol) {
-    const osc = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+let ac;
+let oscNode; 
+let gainNode;
 
-    osc.connect(gain);
-    gain.connect(audioContext.destination);
-
-    gain.gain.value = vol;
-    osc.frequency.value = freq;
-    osc.start();
-    gain.gain.setTargetAtTime(0, audioContext.currentTime + 0.01, 0.02)
-
-    return;
-}
-
-const Player = ({bpm, numBeats, audioContext, doRunMetronome}) => {
-
-    const [currentBeat, setCurrentBeat] = useState(1); 
-    const [prevTime, setPrevTime] = useState(Date.now());
-
-    let interval;
-    useEffect( () => {
-        interval = setInterval( () => {
-            const targetTime = prevTime + 60000/bpm;
-            const now = Date.now();
-            if (now >= targetTime) {
-                console.log(audioContext.state)
-                // Increment the beat
-                if (currentBeat >= numBeats) {
-                    setCurrentBeat(1);
-                    playTone(audioContext, 880, 50, .5);
-                    
-                } else {
-                    setCurrentBeat(currentBeat + 1);
-                    playTone(audioContext, 800, 50, .5);
-                }
-                setPrevTime(now);
-            }
-        }, 5);
-        return () => clearInterval(interval);
-    }, [currentBeat, numBeats]);
+const Player = ({bpm, numBeats}) => {
+    const [isPlaying, setIsPlaying] = useState(false);
     
+
+
+    useEffect( () => {
+        ac = new AudioContext();
+        oscNode = ac.createOscillator();
+        gainNode = ac.createGain();
+        oscNode.connect(gainNode);
+        gainNode.connect(ac.destination);
+        oscNode.frequency.value = 880;
+        gainNode.gain.value = 0;
+        oscNode.start();
+        console.log("Setup");
+    }, [])
+
+    const startMetronome = () => {
+        if (!isPlaying) {
+            ac.resume();
+            setIsPlaying(true);
+            let startTime = ac.currentTime;
+            let beepDuration = 0.04;
+            let beepInterval = 0.5;
+            for (let i = 0; i < 1000; i ++) {
+                gainNode.gain.setValueAtTime(0, startTime + i*beepInterval)
+                gainNode.gain.setValueAtTime(1, startTime + i*beepInterval + 0.01)
+                gainNode.gain.setValueAtTime(0, startTime + i*beepInterval + 0.01 + beepDuration)
+            }
+            console.log("Start");
+        }
+    }
+    const stopMetronome = () => {
+        if (isPlaying) {
+            gainNode.gain.value = 0;
+            gainNode.gain.cancelScheduledValues(ac.currentTime);
+            setIsPlaying(false);
+            console.log("Stop");
+        }
+    }
+
     return (
         <Container>
+            <Button variant="contained" onClick={startMetronome}>Start</Button>
+            <Button variant="contained" onClick={stopMetronome}>Stop</Button>
             <div className="beatCircle" />
-            <p>{currentBeat}</p>
         </Container>
         ); 
 }
