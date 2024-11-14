@@ -24,6 +24,9 @@ const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
                     audioContext.resume();
                     console.log("Scheduling note for", nextNoteTime);
                     const oscNode = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    gainNode.connect(audioContext.destination);
+                    gainNode.gain.value = 0;
                     oscNode.connect(gainNode);
 
                     // Emphasize strong beats
@@ -36,7 +39,12 @@ const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
                     }
 
                     oscNode.start(nextNoteTime);
-                    oscNode.stop(nextNoteTime + 0.05);
+                    gainNode.gain.setValueAtTime(0, nextNoteTime);
+                    gainNode.gain.linearRampToValueAtTime(1, nextNoteTime + 0.005);
+                    gainNode.gain.setValueAtTime(1, nextNoteTime + 0.05);
+                    gainNode.gain.linearRampToValueAtTime(0, nextNoteTime + 0.055);
+                    oscNode.stop(nextNoteTime + 0.055);
+                    
                     const beat = {
                         beatTime: nextNoteTime,
                         beatNum: b
