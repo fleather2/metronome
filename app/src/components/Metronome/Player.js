@@ -3,69 +3,69 @@ import { animate } from "motion";
 import { Container, Button } from "@mui/material";
 import "./beat.css";
 
-let ac;
-let oscNode; 
-let gainNode;
-
 function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
 }
 
-const Player = ({bpm, numBeats}) => {
+const Player = ({bpm, numBeats, audioContext, gainNode}) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const hasPageBeenRendered = useRef(false);
-    const [currentBeat, setCurrentBeat] = useState(0);
-    const [beatTimes, setBeatTimes] = useState([]);
+    const [beatSchedule, setBeatSchedule] = useState([]);
+    const [beatCounter, setBeatCounter] = useState(0);
 
+    let intervalDuration = 0.9;
     useEffect( () => {
-        ac = new AudioContext();
-        oscNode = ac.createOscillator();
-        gainNode = ac.createGain();
-        oscNode.connect(gainNode);
-        gainNode.connect(ac.destination);
-        oscNode.frequency.value = 880;
-        gainNode.gain.value = 0;
-        oscNode.start();
-        console.log("Setup");
-        hasPageBeenRendered.current = true;
-        stopMetronome();
-    }, [])
+        setBeatSchedule([]);
+        const intervalId = setInterval( () => {
+            const startTime = audioContext.currentTime;
+            
+            let noteInterval = 60/bpm;
+            let nextNoteTime = noteInterval*(Math.floor(audioContext.currentTime/noteInterval)+1);
+            let newBeatSchedule = [];
 
-    useEffect ( () => {
-        if (hasPageBeenRendered.current) {
-            startMetronome();
+            while (nextNoteTime <= startTime + intervalDuration) {
+                audioContext.resume();
+                console.log("Scheduling note for", nextNoteTime);
+                const oscNode = audioContext.createOscillator();
+                oscNode.connect(gainNode);
+                
+                newBeatSchedule.push({
+                    noteTime: nextNoteTime,
+                    beatCount: beatCounter
+                })
+                const a = beatSchedule.find((element) => element.beatTime === nextNoteTime);
+                
+
+                let b = ((nextNoteTime) % (noteInterval*4));
+                if (Math.abs(b-0) < 0.01 || Math.abs(b-numBeats*noteInterval) < 0.01) {
+                    oscNode.frequency.value = 1000;
+                } else {
+                    oscNode.frequency.value = 800;
+                }
+                console.log("Beat number:", b);
+
+                oscNode.start(nextNoteTime);
+                oscNode.stop(nextNoteTime + 0.05);
+                nextNoteTime += noteInterval;
+            }
+        //console.log("Beat schedule", newBeatSchedule);
+        
+
+        }, intervalDuration*1000)
+        return () => {
+            clearInterval(intervalId);
         }
     }, [bpm])
 
-    async function startMetronome() {
-        await timeout(100);
-        ac.resume();
-        setIsPlaying(true);
-        let startTime = ac.currentTime;
-        gainNode.gain.cancelScheduledValues(ac.currentTime);
-        let preBeep = 0.005;
-        let beepDuration = 0.04;
-        let beepInterval = 60/bpm;
-        for (let i = 0; i < 1000; i ++) {
-            gainNode.gain.setValueAtTime(0, startTime + i*beepInterval)
-            gainNode.gain.linearRampToValueAtTime(1, startTime + i*beepInterval + preBeep)
-            gainNode.gain.linearRampToValueAtTime(0, startTime + i*beepInterval + preBeep + beepDuration + 0.04)
-            setBeatTimes( (beatTimes) => [...beatTimes, startTime + i*beepInterval])
-            if (i % numBeats === 0) {
-                oscNode.frequency.setValueAtTime(990, startTime + i*beepInterval);
-                oscNode.frequency.setValueAtTime(880, startTime + i*beepInterval + preBeep + beepDuration + 0.04);
-            }
-        }
-        console.log(beatTimes);
-        console.log("Start");
-    }
+    // useEffect( () => {
+    //     const intervalId = setInterval( () => {
+    //         console.log(beatSchedule);
+    //     }, 1000)
+    //     return () => {
+           
+    //     }
 
-    async function stopMetronome() {
-        gainNode.gain.value = 0;
-        gainNode.gain.cancelScheduledValues(ac.currentTime);
-        setIsPlaying(false);
-        console.log("Stop");
-    }
+    // }, [])
 
     // useEffect( () => {
     //     const intervalId = setInterval( () => {
@@ -81,10 +81,9 @@ const Player = ({bpm, numBeats}) => {
 
     return (
         <Container>
-            <Button variant="contained" onClick={() => startMetronome()}>Start</Button>
-            <Button variant="contained" onClick={stopMetronome}>Stop</Button>
+            {/* <Button variant="contained" onClick={() => startMetronome()}>Start</Button>
+            <Button variant="contained" onClick={stopMetronome}>Stop</Button> */}
             <div className="beatCircle" />
-            <p>{currentBeat}</p>
         </Container>
         ); 
 }

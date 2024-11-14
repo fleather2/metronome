@@ -3,7 +3,10 @@ import { Slider, Container, Stack, Button, TextField } from "@mui/material"
 
 const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
 
+    const [tmpBpm, setTmpBpm] = useState(bpm);
+
     const updateBpm = (newBpm) => {
+        setTmpBpm(newBpm);
         if (isNaN(newBpm)) {
             console.error("Cannot change bpm to ", newBpm);
             return false;
@@ -28,14 +31,11 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
                 <Button variant="contained" onClick={() => updateBpm(bpm + -1)}>-1</Button>
                 <TextField 
                     id = "bpm-text-field" 
-                    value={bpm}
+                    value={tmpBpm}
                     onChange={(e) => { 
                         const v = e.target.value;
-                        if (isNaN(v) || !v) {
-                        } else {
-                            setBpm(v)
-                        }
-                         }}
+                        setTmpBpm(v);
+                        }}
                     onBlur={() => {
                         updateBpm(bpm);
                     }}
@@ -47,12 +47,12 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
             <Slider 
                 min={minBpm}
                 max={maxBpm}
-                value={bpm}
+                value={tmpBpm}
                 onChange={ (_, val) => {
-                    setBpm(val);
+                    setTmpBpm(val);
                 }} // TODO we want to separate onChange forom onChangeCommitted, where we pause the metronome on onChange and replay it on onChangeCommitted
                 onChangeCommitted={ () => {
-
+                    updateBpm(tmpBpm);
                 }}
             />
         </Container>
