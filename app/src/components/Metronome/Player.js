@@ -6,6 +6,7 @@ import "./beat.css";
 let ac;
 let oscNode; 
 let gainNode;
+
 function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
 }
@@ -13,6 +14,8 @@ function timeout(delay) {
 const Player = ({bpm, numBeats}) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const hasPageBeenRendered = useRef(false);
+    const [currentBeat, setCurrentBeat] = useState(0);
+    const [beatTimes, setBeatTimes] = useState([]);
 
     useEffect( () => {
         ac = new AudioContext();
@@ -47,7 +50,13 @@ const Player = ({bpm, numBeats}) => {
             gainNode.gain.setValueAtTime(0, startTime + i*beepInterval)
             gainNode.gain.linearRampToValueAtTime(1, startTime + i*beepInterval + preBeep)
             gainNode.gain.linearRampToValueAtTime(0, startTime + i*beepInterval + preBeep + beepDuration + 0.04)
+            setBeatTimes( (beatTimes) => [...beatTimes, startTime + i*beepInterval])
+            if (i % numBeats === 0) {
+                oscNode.frequency.setValueAtTime(990, startTime + i*beepInterval);
+                oscNode.frequency.setValueAtTime(880, startTime + i*beepInterval + preBeep + beepDuration + 0.04);
+            }
         }
+        console.log(beatTimes);
         console.log("Start");
     }
 
@@ -58,11 +67,24 @@ const Player = ({bpm, numBeats}) => {
         console.log("Stop");
     }
 
+    // useEffect( () => {
+    //     const intervalId = setInterval( () => {
+    //         if (beatTimes[currentBeat] < ac.currentTime) {
+    //             setCurrentBeat(currentBeat + 1);
+
+    //         }
+    //     }, 5);
+    //     return () => {
+    //         clearInterval(intervalId);
+    //     };
+    // }, [beatTimes, currentBeat])
+
     return (
         <Container>
             <Button variant="contained" onClick={() => startMetronome()}>Start</Button>
             <Button variant="contained" onClick={stopMetronome}>Stop</Button>
             <div className="beatCircle" />
+            <p>{currentBeat}</p>
         </Container>
         ); 
 }
