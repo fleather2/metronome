@@ -31,7 +31,7 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
                     value={bpm}
                     onChange={(e) => { 
                         const v = e.target.value;
-                        if (isNaN(v)) {
+                        if (isNaN(v) || !v) {
                         } else {
                             setBpm(v)
                         }
