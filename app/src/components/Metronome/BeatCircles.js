@@ -21,7 +21,6 @@ function BeatCircles ({numBeats, currentBeat}) {
             <Stack direction="row" spacing={5} alignItems="center" justifyContent="center">
                 {circles}
             </Stack>
-            {currentBeat} 
         </Container>
     )
 }

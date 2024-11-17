@@ -22,10 +22,12 @@ function Metronome() {
     const [currentBeat, setCurrentBeat] = useState(0);
 
     return (
-        <Container >
-            <Player bpm={bpm} numBeats={NUM_BEATS} audioContext={audioContext} currentBeat={currentBeat} setCurrentBeat={setCurrentBeat}/>
-            <BpmSelector maxBpm={MAX_BPM} minBpm={MIN_BPM} bpm={bpm} setBpm={setBpm}/>
-            <BeatCircles numBeats={NUM_BEATS} currentBeat={currentBeat}/>
+        <Container>
+            <Stack spacing={4} alignItems="center" justifyContent="center">
+                <Player bpm={bpm} numBeats={NUM_BEATS} audioContext={audioContext} currentBeat={currentBeat} setCurrentBeat={setCurrentBeat}/>
+                <BpmSelector maxBpm={MAX_BPM} minBpm={MIN_BPM} bpm={bpm} setBpm={setBpm}/>
+                <BeatCircles numBeats={NUM_BEATS} currentBeat={currentBeat}/>
+            </Stack>
         </Container>
     )
 }

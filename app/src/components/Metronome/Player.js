@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef} from "react";
-import { Container, Button } from "@mui/material";
+import { Container, Button, Stack} from "@mui/material";
 
 const Player = ({bpm, numBeats, audioContext, currentBeat, setCurrentBeat}) => {
     const [play, setPlay] = useState(false);
@@ -73,8 +73,10 @@ const Player = ({bpm, numBeats, audioContext, currentBeat, setCurrentBeat}) => {
 
     return (
         <Container>
-            <Button variant="contained" onClick={() => startMetronome()}>Start</Button>
-            <Button variant="contained" onClick={() => stopMetronome()}>Stop</Button>
+            <Stack direction="row" spacing={2} alignItems="center" justifyContent="center">
+                <Button variant="contained" onClick={() => startMetronome()}>Start</Button>
+                <Button variant="contained" onClick={() => stopMetronome()}>Stop</Button>
+            </Stack>
         </Container>
     )
 }
