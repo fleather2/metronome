@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { motion } from "framer-motion";
 import { Slider, Container, Stack, Button, TextField, InputAdornment, FormControl } from "@mui/material"
 import BpmSelector from "./BpmSelector"
 import Player from './Player';
+import BeatCircles from './BeatCircles';
 
 /*  TODO
 3 parts:
@@ -18,11 +18,13 @@ const NUM_BEATS = 4;
 function Metronome() {
     const [bpm, setBpm] = useState(DEFAULT_BPM);
     const audioContext = new AudioContext();
+    const [currentBeat, setCurrentBeat] = useState(0);
 
     return (
         <Container >
-            <Player bpm={bpm} numBeats={NUM_BEATS} audioContext={audioContext}/>
+            <Player bpm={bpm} numBeats={NUM_BEATS} audioContext={audioContext} currentBeat={currentBeat} setCurrentBeat={setCurrentBeat}/>
             <BpmSelector maxBpm={MAX_BPM} minBpm={MIN_BPM} bpm={bpm} setBpm={setBpm}/>
+            <BeatCircles numBeats={NUM_BEATS} currentBeat={currentBeat}/>
         </Container>
     )
 }

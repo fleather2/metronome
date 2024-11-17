@@ -1,15 +1,9 @@
 import { useState, useEffect, useRef} from "react";
-import { animate } from "motion";
 import { Container, Button } from "@mui/material";
-import Dots from "./Dots";
 
-function timeout(delay) {
-    return new Promise( res => setTimeout(res, delay) );
-}
-
-const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
+const Player = ({bpm, numBeats, audioContext, currentBeat, setCurrentBeat}) => {
     const [play, setPlay] = useState(false);
-
+    
     let intervalDuration = 0.9;
     useEffect( () => {
         if (play) {
@@ -57,8 +51,6 @@ const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
         }
     }, [bpm, play])
 
-    const [currentBeat, setCurrentBeat] = useState();
-
     function scheduleBeatChange(beat) {
         if (play) {
             console.log(beat, (beat.beatTime - audioContext.currentTime)*1000);
@@ -82,9 +74,6 @@ const Player = ({bpm, numBeats, audioContext, gainNode, beatSet}) => {
         <Container>
             <Button variant="contained" onClick={() => startMetronome()}>Start</Button>
             <Button variant="contained" onClick={() => stopMetronome()}>Stop</Button>
-            <Dots numBeats={numBeats} currentBeat={currentBeat}/>
-            
-            {currentBeat}
         </Container>
     )
 }
