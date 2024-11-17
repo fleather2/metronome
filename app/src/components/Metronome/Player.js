@@ -61,12 +61,13 @@ const Player = ({bpm, numBeats, audioContext, currentBeat, setCurrentBeat}) => {
     }
 
     function startMetronome() {
-        audioContext.suspend();
+        setCurrentBeat(0);
+        audioContext.resume();
         setPlay(true);
     }
 
     function stopMetronome() {
-        audioContext.resume();
+        audioContext.suspend();
         setPlay(false);
     }
 

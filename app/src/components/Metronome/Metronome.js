@@ -14,10 +14,11 @@ const MIN_BPM = 20;
 const MAX_BPM = 400;
 const DEFAULT_BPM = 120;
 const NUM_BEATS = 4;
+const audioContext = new AudioContext();
+
 
 function Metronome() {
     const [bpm, setBpm] = useState(DEFAULT_BPM);
-    const audioContext = new AudioContext();
     const [currentBeat, setCurrentBeat] = useState(0);
 
     return (
