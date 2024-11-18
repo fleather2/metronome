@@ -1,13 +1,21 @@
 import logo from './logo.svg';
 import Metronome from './components/Metronome/Metronome';
 import './App.css';
+import { Container } from '@mui/material';
 
 function App() {
   return (
-    <div>
-      <h1>Base App</h1>
+    <Container>
+      <h1>Metronome</h1>
+
       <Metronome />
-    </div>
+      <body1>
+        <i>"If you're not practicing with a metronome, what are you doing?"</i>
+        <br />
+        - Every bad bass teacher
+      </body1>
+      <br /> <br />
+    </Container>
   );
 }
 
