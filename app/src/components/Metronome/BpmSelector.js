@@ -24,6 +24,12 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
         return true;
     }
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            updateBpm(tmpBpmText);
+        }
+    }
+
     return (
         <Container>
             <Stack direction="row" spacing={2} alignItems="center" justifyContent="center">
@@ -40,6 +46,7 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
                     onBlur={() => {
                         updateBpm(tmpBpmText);
                     }}
+                    onKeyDown={handleKeyDown}
                 />
                 <Button variant="contained" onClick={() => updateBpm(bpm + 1)}>+1</Button>
                 <Button variant="contained" onClick={() => updateBpm(bpm + 5)}>+5</Button>
