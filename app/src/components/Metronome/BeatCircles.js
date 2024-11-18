@@ -3,23 +3,13 @@ import Stack from "@mui/material/Stack";
 import "./beat.css";
 
 function BeatCircle (isCurrent, i) {
-    if (isCurrent) {
-        return (
-            <Container key={i}>
-            <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="10" className="beatCircleFilled"/>
-            </svg>
-            </Container >
-            )
-    } else{
-        return (
-            <Container key={i}>
-            <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="10" className="beatCircle"/>
-            </svg>
-            </Container >
-            )
-    }
+    return (
+    <Container key={i}>
+        <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="10" className={isCurrent ? "beatCircleFilled" : "beatCircle"}/>
+        </svg>
+    </Container >
+    )
 }
 
 function BeatCircles ({numBeats, currentBeat}) {
