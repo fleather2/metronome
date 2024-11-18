@@ -3,23 +3,24 @@ import { Slider, Container, Stack, Button, TextField } from "@mui/material"
 
 const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
 
-    const [tmpBpm, setTmpBpm] = useState(bpm);
+    const [tmpBpmText, setTmpBpmText] = useState(bpm);
+    const [tmpBpmSlider, setTmpBpmSlider] = useState(bpm);
 
     const updateBpm = (newBpm) => {
-        setTmpBpm(newBpm);
         if (isNaN(newBpm)) {
             console.error("Cannot change bpm to ", newBpm);
             return false;
         }
+        let b = newBpm;
         if (newBpm > maxBpm) {
-            setBpm(maxBpm);
-            return true;
+            b = maxBpm
         } 
         if (newBpm < minBpm) {
-            setBpm(minBpm);
-            return true;
+            b = minBpm;
         }
-        setBpm(newBpm);
+        setBpm(b);
+        setTmpBpmText(b);
+        setTmpBpmSlider(b);
         return true;
     }
 
@@ -31,13 +32,13 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
                 <Button variant="contained" onClick={() => updateBpm(bpm + -1)}>-1</Button>
                 <TextField 
                     id = "bpm-text-field" 
-                    value={tmpBpm}
+                    value={tmpBpmText}
                     onChange={(e) => { 
                         const v = e.target.value;
-                        setTmpBpm(v);
+                        setTmpBpmText(v);
                         }}
                     onBlur={() => {
-                        updateBpm(bpm);
+                        updateBpm(tmpBpmText);
                     }}
                 />
                 <Button variant="contained" onClick={() => updateBpm(bpm + 1)}>+1</Button>
@@ -47,12 +48,12 @@ const BpmSelector = ({maxBpm, minBpm, bpm, setBpm}) => {
             <Slider 
                 min={minBpm}
                 max={maxBpm}
-                value={tmpBpm}
+                value={tmpBpmSlider}
                 onChange={ (_, val) => {
-                    setTmpBpm(val);
+                    setTmpBpmSlider(val);
                 }} // TODO we want to separate onChange forom onChangeCommitted, where we pause the metronome on onChange and replay it on onChangeCommitted
                 onChangeCommitted={ () => {
-                    updateBpm(tmpBpm);
+                    updateBpm(tmpBpmSlider);
                 }}
             />
         </Container>
