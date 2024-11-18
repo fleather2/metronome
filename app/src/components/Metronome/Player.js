@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef} from "react";
 import { Container, Button, Stack} from "@mui/material";
-
+let MAX_GAIN = 0.2;
 const Player = ({bpm, numBeats, audioContext, currentBeat, setCurrentBeat}) => {
     const [play, setPlay] = useState(false);
     
@@ -32,8 +32,8 @@ const Player = ({bpm, numBeats, audioContext, currentBeat, setCurrentBeat}) => {
 
                     oscNode.start(nextNoteTime);
                     gainNode.gain.setValueAtTime(0, nextNoteTime);
-                    gainNode.gain.linearRampToValueAtTime(1, nextNoteTime + 0.005);
-                    gainNode.gain.setValueAtTime(1, nextNoteTime + 0.05);
+                    gainNode.gain.linearRampToValueAtTime(MAX_GAIN, nextNoteTime + 0.005);
+                    gainNode.gain.setValueAtTime(MAX_GAIN, nextNoteTime + 0.05);
                     gainNode.gain.linearRampToValueAtTime(0, nextNoteTime + 0.055);
                     oscNode.stop(nextNoteTime + 0.055);
                     
