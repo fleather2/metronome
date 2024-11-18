@@ -1,5 +1,6 @@
 circle.beatCircle {
-  display: inline-block;
+  display: block;
+  margin: auto;
   stroke: rgb(64, 64, 64);
   stroke-width: 2;
   fill-opacity: 0;
@@ -12,7 +13,8 @@ circle.beatCircle {
 }
 
 circle.beatCircleFilled {
-  display: inline-block;
+  display: block;
+  margin: auto;
   stroke: rgb(64, 64, 64);
   stroke-width: 2;
   fill-opacity: 0;

@@ -6,16 +6,16 @@ function BeatCircle (isCurrent, i) {
     if (isCurrent) {
         return (
             <Container key={i}>
-            <svg width="50%" height="50%" viewBox="0 0 50 50">
-                <circle cx="50%" cy="50%" r="30%" className="beatCircleFilled"/>
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="10" className="beatCircleFilled"/>
             </svg>
             </Container >
             )
     } else{
         return (
             <Container key={i}>
-            <svg width="50%" height="50%" viewBox="0 0 50 50">
-                <circle cx="50%" cy="50%" r="30%" className="beatCircle"/>
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="10" className="beatCircle"/>
             </svg>
             </Container >
             )
@@ -30,7 +30,7 @@ function BeatCircles ({numBeats, currentBeat}) {
 
     return (
         <Container>
-            <Stack direction="row" spacing={5} alignItems="center" justifyContent="center">
+            <Stack direction="row" spacing={5}>
                 {circles}
             </Stack>
         </Container>
