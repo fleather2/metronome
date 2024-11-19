@@ -4,11 +4,9 @@ import "./beat.css";
 
 function BeatCircle (isCurrent, i) {
     return (
-    <Container key={i}>
-        <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="10" className={isCurrent ? "beatCircleFilled" : "beatCircle"}/>
+        <svg viewBox="0 0 100 100" style={{height: "50px"}} key={i}>
+            <circle cx="50" cy="50" r="40" className={isCurrent ? "beatCircleFilled" : "beatCircle"}/>
         </svg>
-    </Container >
     )
 }
 
@@ -20,7 +18,7 @@ function BeatCircles ({numBeats, currentBeat}) {
 
     return (
         <Container>
-            <Stack direction="row" spacing={5}>
+            <Stack direction="row" spacing={15} alignItems="center" justifyContent="center">
                 {circles}
             </Stack>
         </Container>

@@ -2,7 +2,7 @@ circle.beatCircle {
   display: block;
   margin: auto;
   stroke: rgb(64, 64, 64);
-  stroke-width: 2;
+  stroke-width: 5;
   fill-opacity: 0;
 }
 
@@ -16,7 +16,7 @@ circle.beatCircleFilled {
   display: block;
   margin: auto;
   stroke: rgb(64, 64, 64);
-  stroke-width: 2;
+  stroke-width: 5;
   fill-opacity: 0;
   animation-name: fadeFlash;
   animation-duration: 500ms;
